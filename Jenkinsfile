@@ -26,5 +26,16 @@ pipeline {
                 sh 'npm audit || true'
             }
         }
+        stage('SonarCloud Analysis') {
+            steps {
+              withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                sh '''
+                  npm install
+                  npm run test -- --coverage
+                  sonar-scanner
+                '''
+        }
+           }
+       }
     }
 }
